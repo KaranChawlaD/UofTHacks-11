@@ -7,8 +7,15 @@ def index(request):
     return render(request, 'index.html', {'mementos': mementos})
 
 def memento(request, id):
-    memento = get_object_or_404(Memento, id=id)
-    return render(request, 'memento.html', {'memento': memento})
+    memento_id = get_object_or_404(Memento, id=id)
+    mementos = Memento.objects.all()
+
+    context = {
+        'memento_id': memento_id,
+        'mementos': mementos
+    }
+
+    return render(request, 'mementos.html', context)
 
 def addMemento(request):
     return render(request, 'add-memento.html')

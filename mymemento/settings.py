@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-qok)@pdg2)e7y+70bkd4d2qtjh=t5ddjete&n7d(ar19tju=5w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mementospark.onrender.com']
 
 
 # Application definition
