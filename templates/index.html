@@ -1,11 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>It worked</h1>
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Your Mementos{% endblock %}
+{% block content %}
+<section class="home">
+    <div class="container">
+        <h1 class="py-5">My Mementos</h1>
+
+        <div class="row">
+            {% for memento in mementos %}
+            <div class="col-9 col-md-4">
+                <div class="card card-body skewed-card-left brown">
+                    <h1 class="title-font">{{memento.title}}</h1>
+                    <div class="image-wrap">
+                        <img class="w-100" src="{{ memento.img }}" alt="Image not found">
+                    </div>
+                    <p class="text-center my-3"><strong>Crafted on {{memento.published_date}} with ❤️ </strong></p>
+                    <div class=" first">
+                        <a href="" target="_blank">
+                          <div class="one">
+                            <div class="btn front">Wanna Recall?</div>
+                            <div class="btn back">Explore It!</div>
+                          </div>
+                        </a>
+                      </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock content %}
