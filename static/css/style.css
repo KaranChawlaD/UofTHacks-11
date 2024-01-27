@@ -7,7 +7,10 @@ body {
 nav {
   background-color: #f5d19b;
   overflow: hidden;
-  padding: 16px;
+  padding: 16px 5em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 nav a {
   font-family: Playfair-Display;
@@ -37,6 +40,12 @@ nav a:hover {
 }
 nav a:hover::before {
   width: 100%;
+}
+nav .logo {
+  width: 175px;
+}
+nav ul {
+  list-style: none;
 }
 
 .home .card {

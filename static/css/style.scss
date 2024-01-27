@@ -12,7 +12,10 @@ body{
 nav {
     background-color: $brown;
     overflow: hidden;
-    padding: 16px;
+    padding: 16px 5em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     a {
         font-family: Playfair-Display;
         font-size: 20px;
@@ -41,6 +44,12 @@ nav {
                 width: 100%;
         }
         }
+    }
+    .logo{
+      width: 175px;
+    }
+    ul{
+      list-style: none;
     }
 }
 
