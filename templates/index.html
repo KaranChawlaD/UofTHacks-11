@@ -10,18 +10,18 @@
         <div class="row">
             {% for memento in mementos %}
             <div class="col-9 col-md-4">
-                <div class="card card-body skewed-card-left brown">
+                <div class="card card-body brown">
                     <h1 class="title-font">{{memento.title}}</h1>
                     <div class="image-wrap">
                         <img class="w-100" src="{{ memento.img }}" alt="Image not found">
                     </div>
                     <p class="text-center my-3"><strong>Crafted on {{memento.published_date}} with ❤️ </strong></p>
                     <div class=" first">
-                        <a href="" target="_blank">
-                          <div class="one">
-                            <div class="btn front">Wanna Recall?</div>
-                            <div class="btn back">Explore It!</div>
-                          </div>
+                        <a href="{% url 'memento' id=memento.id %}" target="_blank">
+                            <div class="one">
+                                <div class="btn front">Wanna Recall?</div>
+                                <div class="btn back">Explore It!</div>
+                            </div>
                         </a>
                       </div>
                 </div>
