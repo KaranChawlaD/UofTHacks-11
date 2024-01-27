@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-qok)@pdg2)e7y+70bkd4d2qtjh=t5ddjete&n7d(ar19tju=5w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://mementospark.onrender.com/']
+ALLOWED_HOSTS = ['mementospark.onrender.com']
 
 
 # Application definition
@@ -56,8 +56,8 @@ ROOT_URLCONF = 'mymemento.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        "DIRS": [TEMPLATE_DIR],
+        #'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
