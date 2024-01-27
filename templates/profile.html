@@ -1,8 +1,35 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-    <h2>My Profile</h2>
-    <p>Add your content here.</p>
+<div class="container p-4 profile">
+    <div class="row align-items-center justify-content-center" style="height: 70vh;">
+        <div class="col-md-7 d-flex justify-content-between" >
+                <div class="align-items-left" style="width: 50%;">
+                    <h2 class="text-left fs-1">{{user.username}}</h2> 
+                    <div class="form-outline mt-5 text-left">
+                    <p>Email: {{ user.email }}</p>
+                    <p>Total Mementos: {{ total_mementos }}</p>
+                    <a href="/login/" class="text-left text-danger">Logout</a>
+                    </div>    
+                </div>
+                <div class="align-items-right">
+                    {% if user_profile.profile_pic %}
+                        <img class="w-100" src="{{ user_profile.profile_pic.url }}" alt="{{ user.username }}'s Profile Photo">
+                    {% else %}
+                        <div class="profile-photo-placeholder">
+                            <img class="w-100" src="{% static 'img/profilepic.svg' %}" alt="{{ user.username }}'s No Profile Photo">
+                        </div>
+                    {% endif %}
+                </div>
+        </div>    
+        </div>
+</div>
 {% endblock %}
+<script type="text/javascript">
+    $(document).ready(function(){
+    $(".active").removeClass("active");
+    $("#MyProfile").addClass("active");
+    });
+</script>

@@ -5,28 +5,54 @@
 {% block content %}
 <section class="home">
     <div class="container">
-        <h1 class="py-5">My Mementos</h1>
 
+        <h1 class="title-font"><a href="/"><img src="{% static 'img/back.svg' %}" alt="Go Back" style="width: 40px"></a>
+            {{ memento.title }}</h1>
+        
         <div class="row">
-            {% for memento in mementos %}
-            <div class="col-9 col-md-4">
+            <div class="col-md-8">
                 <div class="card card-body brown">
-                    <h1 class="title-font">{{memento.title}}</h1>
                     <div class="image-wrap">
-                        <img class="w-100" src="{{ memento.img }}" alt="Image not found">
+                        <img class="w-100" src="{{ memento.img.url }}" alt="Image not found">
                     </div>
-                    <p class="text-center my-3"><strong>Crafted on {{memento.published_date}} with ❤️ </strong></p>
-                    <div class=" first">
-                        <a href="{% url 'memento' id=memento.id %}" target="_blank">
-                            <div class="one">
-                                <div class="btn front">Wanna Recall?</div>
-                                <div class="btn back">Explore It!</div>
-                            </div>
-                        </a>
-                      </div>
+                    {% if memento.text %}
+                        <div class="memento-text py-5">
+                            {{ memento.text|linebreaksbr }}
+                        </div>
+                    {% endif %}
+                    <p class="text-center my-3"><strong>Crafted on {{ memento.published_date }} with ❤️ </strong></p>
+                    
                 </div>
             </div>
-            {% endfor %}
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card card-body brown">
+                            <h3>Refresh Your Memories with Audio</h3>
+                            {% if memento.audio %}
+                                <div class="audio-controls">
+                                    <div class="position-relative">
+                                        <img src="{% static 'img/radio.svg' %}" alt="Radio" class="radio-icon w-100">
+                                        <img src="{% static 'img/play.svg' %}" alt="Play" class="play-btn" onclick="toggleAudio()">
+                                        <img src="{% static 'img/pause.svg' %}" alt="Pause" class="pause-btn" onclick="toggleAudio()">
+                                    </div>
+                                    <audio id="mementoAudio" src="{{ memento.audio.url }}"></audio>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-12 mt-3">
+                        <div class="card card-body brown">
+                            <h3>Mementos Info:</h3>
+                        <ul>
+                            <li>Created on: {{ memento.published_date }}</li>
+                            <li>Created by: {{ user.username }}</li>
+                            <li>This Memento is <span id="mementoAge"></span> old.</li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

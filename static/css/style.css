@@ -1,28 +1,70 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap");
 body {
   color: #183d4d !important;
-  background-color: #fff3d4 !important;
+  background-image: linear-gradient(to bottom right, #fff3d4, #f5ba62);
+  font-family: "Fredoka", sans-serif !important;
+  min-height: 130vh;
+  overflow-y: scroll;
+  margin: 0px;
+  padding-top: 10em;
+  padding-bottom: 3em;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+.pause-btn {
+  display: none;
+}
+
+.play-btn, .pause-btn {
+  position: absolute;
+  right: 27%;
+  top: 47%;
+  width: 36px;
+  background: antiquewhite;
+  border-radius: 32px;
+  padding: 7px;
+}
+
+.content {
+  flex: 1;
+}
+
+.h-100 {
+  height: 80vh !important;
 }
 
 nav {
+  z-index: 11;
   background-color: #f5d19b;
   overflow: hidden;
-  padding: 16px 5em;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  position: fixed !important;
+  background-color: #f5d19b;
+  top: 0;
+  width: 100%;
+  box-shadow: 0 5px 9px rgba(222, 93, 77, 0.4901960784);
 }
 nav a {
-  font-family: Playfair-Display;
-  font-size: 20px;
+  font-size: 22px !important;
+  font-weight: 700;
   position: relative;
   float: right;
   display: block;
-  color: #183d4d;
+  color: #183d4d !important;
   text-align: center;
-  padding: 4px 0px;
-  margin-left: 25px;
+  padding: 4px 0px !important;
+  margin-left: 30px;
   text-decoration: none;
+  transition: all 0.5s ease-in-out;
 }
 nav a::before {
   content: "";
@@ -31,34 +73,59 @@ nav a::before {
   left: 0;
   width: 0;
   height: 2px; /* Adjust the height of the underline */
-  background-color: #183d4d;
+  background-color: #de5d4d !important;
   transition: width 0.3s ease; /* Adjust the transition duration and easing function */
   text-decoration: none;
 }
 nav a:hover {
-  color: #183d4d;
+  color: #de5d4d !important;
 }
 nav a:hover::before {
   width: 100%;
 }
-nav .logo {
+nav li a .active {
+  color: #de5d4d !important;
+}
+
+.logo {
   width: 175px;
 }
-nav ul {
+
+ul {
   list-style: none;
+}
+
+footer {
+  background-color: #de5d4d;
+  overflow: hidden;
+  padding: 1em;
+  display: flex;
+  font-family: Playfair-Display;
+  font-size: 14px;
+  font-weight: 700;
+  display: block;
+  color: #fff3d4;
+  text-align: right;
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+  left: 0;
 }
 
 .home .card {
   background-color: #f5d19b !important;
+  border-width: 2px;
 }
-.home .one {
+
+.one {
   position: relative;
   cursor: pointer;
   width: 264px;
   height: 64px;
   margin: 1em auto;
 }
-.home .one .btn {
+
+.one .btn {
   position: absolute;
   width: 260px;
   height: 60px;
@@ -73,7 +140,8 @@ nav ul {
   font-style: italic;
   font-size: 22px;
 }
-.home .one .front {
+
+.one .front {
   top: 0;
   left: 0;
   z-index: 2;
@@ -81,7 +149,8 @@ nav ul {
   border: 4px solid #863b00;
   text-shadow: 0px 2px 0px #000000;
 }
-.home .one .back {
+
+.one .back {
   z-index: 1;
   top: 4px;
   left: 4px;
@@ -89,6 +158,7 @@ nav ul {
   border: 4px solid #000;
   text-shadow: 0px 2px 0px #C9473A;
 }
+
 @keyframes swap {
   0% {
     top: 4px;
@@ -102,6 +172,148 @@ nav ul {
     z-index: 3;
   }
 }
-.home .one:hover .back {
+.one:hover .back {
   animation: swap 1s forwards;
+}
+
+.login {
+  background: #f5d19b;
+  padding: 4em 2em;
+  border-radius: 17px;
+  box-shadow: 11px 11px 0 #de5d4d 4.53deg 85.15% 60.39%;
+}
+.login .form-control {
+  background-color: #de5d4d 4.53deg 85.15% 60.39%;
+  color: #fff3d4;
+}
+.login .brand-btn {
+  border-radius: 17px;
+  box-shadow: 11px 11px 0 #de5d4d 4.53deg 85.15% 60.39%;
+  border: none;
+  background-color: #de5d4d 4.53deg 85.15% 60.39%;
+  padding: 17px 46px;
+}
+
+.form-check-input[type=checkbox] {
+  border-radius: 8%;
+  background-color: #ffffff;
+}
+
+.form-check-input[type=checkbox]:checked {
+  background-color: #de5d4d;
+}
+
+.form-check-input[type=checkbox]:focus {
+  outline-color: #de5d4d;
+}
+
+.form-check-input[type=checkbox]:focus {
+  border-color: rgb(var(--bs-body-color-rgb), 0.2);
+  outline: 0;
+  box-shadow: 0 0 0 0.15rem rgba(222, 93, 77, 0.25);
+}
+
+form img {
+  width: 56%;
+  margin: 0 auto 2em;
+  display: block;
+}
+
+.profile .col-md-7, .profile .col-md-12, .add-momento .col-md-7, .add-momento .col-md-12 {
+  background: #f5d19b;
+  padding: 4em 2em;
+  border-radius: 17px;
+  box-shadow: 11px 11px 0 hsl(4.53, 85.15%, 60.39%);
+}
+
+.form-control {
+  background-color: hsl(11, 80%, 45%) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+}
+.form-control:focus {
+  border-color: #f5d19b !important;
+  box-shadow: 0 0 0 0.25rem hsla(11, 80%, 45%, 0.3) !important;
+}
+.form-control::-moz-placeholder {
+  color: #fff3d4;
+}
+.form-control::placeholder {
+  color: #fff3d4;
+}
+
+/* Custom styling for the file input */
+.custom-form-control {
+  display: inside;
+}
+
+.custom-file-label {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.custom-file-button {
+  background-color: #de5d4d;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.index-1 {
+  z-index: 1;
+}
+
+.index-2 {
+  z-index: 2;
+}
+
+.btn-danger {
+  background-color: #de5d4d;
+  color: white;
+}
+
+.btn-white {
+  background-color: white !important;
+  border-color: #de5d4d !important;
+  border-width: 2px !important;
+  padding: 0px;
+}
+
+.text-danger {
+  color: #de5d4d;
+}
+
+.image-wrap img {
+  height: 30vh;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.edit form img {
+  width: 18%;
+  margin: 2em 0;
+  display: block;
+}
+
+.title-font {
+  font-size: 2em;
+}
+
+.register {
+  background: #f5d19b;
+  padding: 4em 2em;
+  border-radius: 17px;
+  box-shadow: 11px 11px 0 hsl(4.53, 85.15%, 60.39%);
+}
+.register .form-control {
+  background-color: hsl(4.53, 85.15%, 60.39%);
+  color: #fff3d4;
+}
+.register .brand-btn {
+  border-radius: 17px;
+  box-shadow: 11px 11px 0 #de5d4d 4.53deg 85.15% 60.39%;
+  border: none;
+  background-color: #de5d4d 4.53deg 85.15% 60.39%;
+  padding: 17px 46px;
 }/*# sourceMappingURL=style.css.map */

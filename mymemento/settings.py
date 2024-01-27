@@ -9,13 +9,12 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
 from pathlib import Path
 import os
-from dotenv import load_dotenv, find_dotenv
+from decouple import config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -26,7 +25,7 @@ SECRET_KEY = 'django-insecure-qok)@pdg2)e7y+70bkd4d2qtjh=t5ddjete&n7d(ar19tju=5w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mementospark.onrender.com']
+ALLOWED_HOSTS = ['mementospark.tech', 'mementospark.onrender.com']
 
 
 # Application definition
@@ -56,8 +55,7 @@ ROOT_URLCONF = 'mymemento.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        #'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'DIRS': [TEMPLATE_DIR],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,14 +126,10 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Load environment definition file
-ENV_FILE = find_dotenv()
-if ENV_FILE:
-    load_dotenv(ENV_FILE)
-
-# Load Auth0 application settings into memory
-
-
-AUTH0_CLIENT_ID='a1CvYaLrDVytxgKSPQN2eB2iBoi761Du'
-AUTH0_CLIENT_SECRET='1gMpm-Q-q6RyCsMu1vt1bO17iu3Vvot_t8DqbM7Ss6rT_JXPmreUqMmoSsW5tdni'
-AUTH0_DOMAIN='dev-gbmh2dnzcuszmrok.us.auth0.com'
+EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
+EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+LOGIN_URL = 'login'

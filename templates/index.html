@@ -3,39 +3,103 @@
 
 {% block title %}Your Mementos{% endblock %}
 {% block content %}
-{% if session %}
-  <h1>Welcome {{session.userinfo.name}}!</h1>
-  <p><a href="{% url 'logout' %}">Logout</a></p>
-  <div><pre>{{pretty}}</pre></div>
-{% else %}
-  <h1>Welcome Guest</h1>
-  <p><a href="{% url 'login' %}">Login</a></p>
-{% endif %}
 <section class="home">
     <div class="container">
-        <h1 class="py-5">My Mementos</h1>
-
         <div class="row">
-            {% for memento in mementos %}
-            <div class="col-9 col-md-4">
-                <div class="card card-body brown">
-                    <h1 class="title-font">{{memento.title}}</h1>
-                    <div class="image-wrap">
-                        <img class="w-100" src="{{ memento.img }}" alt="Image not found">
+            {% if messages %}
+                <ul class="messages">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {% for message in messages %}
+                        <strong>{{ message }}</strong>
+                        {% endfor %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    <p class="text-center my-3"><strong>Crafted on {{memento.published_date}} with ❤️ </strong></p>
-                    <div class=" first">
-                        <a href="{% url 'memento' id=memento.id %}" target="_blank">
-                            <div class="one">
-                                <div class="btn front">Wanna Recall?</div>
-                                <div class="btn back">Explore It!</div>
+                </ul>
+            {% endif %}
+            {% if mementos %}
+                <h1 class="mb-4">My Mementos</h1>
+                {% for memento in mementos %}
+                    <div class="col-9 col-md-4 my-1 mb-4">
+                        <div class="card card-body brown">
+                            {% if memento.title|length > 12 %}
+                                <h1 class="title-font">{{ memento.title|slice:":12" }}...</h1>
+                            {% else %}
+                                <h1 class="title-font">{{ memento.title }}</h1>
+                            {% endif %}
+
+                            <div class="image-wrap">
+                                <img class="w-100" src="{{ memento.img }}" alt="Image not found">
                             </div>
-                        </a>
-                      </div>
-                </div>
-            </div>
-            {% endfor %}
+                            <p class="text-center my-3"><strong>Crafted on {{ memento.published_date }} with ❤️ </strong></p>
+                            <a href="{% url 'memento' id=memento.id %}" class="btn-danger btn btn-lg mb-2">Relive the Memory</a>
+                            <button type="button" class="btn btn-white mb-2" data-bs-toggle="modal" data-bs-target="#editModal{{ memento.id }}">
+                                <img src="{% static 'img/edit.svg' %}" alt="Edit" style="width: 22px;">
+                            </button>
+                            <button type="button" class="btn btn-white" data-bs-toggle="modal" data-bs-target="#deleteModal{{ memento.id }}">
+                                <img src="{% static 'img/trash.svg' %}" alt="Delete" style="width: 22px;">
+                            </button>
+                        </div>
+
+                        <!-- Delete Memento Modal -->
+                        <div class="modal fade" id="deleteModal{{ memento.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ memento.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel{{ memento.id }}">Delete Memento</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {% if memento.title|length > 28 %}
+                                            <p>Are you sure you want to delete "{{ memento.title|wordwrap:28|slice:":28" }}"?</p>
+                                        {% else %}
+                                            <p>Are you sure you want to delete "{{ memento.title }}"?</p>
+                                        {% endif %}
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <a href="{% url 'delete-memento' id=memento.id %}" class="btn btn-danger">Yes, Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="editModal{{ memento.id }}" tabindex="-1" aria-labelledby="editModalLabel{{ memento.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel{{ memento.id }}">Delete Memento</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {% if memento.title|length > 28 %}
+                                            <p>Are you sure you want to edit "{{ memento.title|wordwrap:28|slice:":28" }}"?</p>
+                                        {% else %}
+                                            <p>Are you sure you want to edit "{{ memento.title}}"?</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <a href="{% url 'edit_memento' memento_id=memento.id %}" class="btn btn-danger">Yes, Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            {% else  %}
+                <h1 class="py-2">You Have No Mementos</h1>
+                <a href="/add-memento/" class="btn-danger btn btn-lg d-inline-block w-auto">Craft Now!!</a>
+            {% endif %}
         </div>
     </div>
 </section>
+
 {% endblock content %}
+
+<script type="text/javascript">
+    $(document).ready(function(){
+    $(".active").removeClass("active");
+    $("#MyMementos").addClass("active");
+    });
+</script>

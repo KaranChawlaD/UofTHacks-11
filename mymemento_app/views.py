@@ -1,73 +1,148 @@
 import json
-from authlib.integrations.django_client import OAuth
-from django.conf import settings
-from django.shortcuts import redirect, render, redirect, get_object_or_404
-from django.urls import reverse
-from urllib.parse import quote_plus, urlencode
-from .models import Memento
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Memento, UserProfile, User
+from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.core.mail import send_mail
 
-oauth = OAuth()
 
-oauth.register(
-    "auth0",
-    client_id=settings.AUTH0_CLIENT_ID,
-    client_secret=settings.AUTH0_CLIENT_SECRET,
-    client_kwargs={
-        "scope": "openid profile email",
-    },
-    server_metadata_url=f"https://{settings.AUTH0_DOMAIN}/.well-known/openid-configuration",
-)
 
-def login(request):
-    return oauth.auth0.authorize_redirect(
-        request, request.build_absolute_uri(reverse("callback"))
-    )
-
-def callback(request):
-    token = oauth.auth0.authorize_access_token(request)
-    request.session["user"] = token
-    return redirect(request.build_absolute_uri(reverse("index")))
-
-def logout(request):
-    request.session.clear()
-
-    return redirect(
-        f"https://{settings.AUTH0_DOMAIN}/v2/logout?"
-        + urlencode(
-            {
-                "returnTo": request.build_absolute_uri(reverse("index")),
-                "client_id": settings.AUTH0_CLIENT_ID,
-            },
-            quote_via=quote_plus,
-        ),
-    )
-
+@login_required
 def index(request):
-    mementos = Memento.objects.all()
-    return render(
-        request,
-        'index.html',
-        context={
-            "mementos": mementos,
-            "session": request.session.get("user"),
-            "pretty": json.dumps(request.session.get("user"), indent=4),
-        },
-    )
+    mementos = Memento.objects.filter(user=request.user)
+    return render(request, 'index.html', { "mementos": mementos })
 
+@login_required
 def memento(request, id):
-    memento_id = get_object_or_404(Memento, id=id)
-    mementos = Memento.objects.all()
+    memento = get_object_or_404(Memento, id=id, user=request.user)
 
     context = {
-        'memento_id': memento_id,
-        'mementos': mementos
+        'memento': memento,
     }
 
     return render(request, 'mementos.html', context)
 
+@login_required
 def addMemento(request):
-    return render(request, 'add-memento.html')
+    if request.method == 'POST':
+        # Retrieve form data from POST request
+        title = request.POST['title']
+        text = request.POST['text']
+        img = request.FILES['img']
+        audio = request.FILES['audio']
 
+        user = request.user
+
+        memento = Memento.objects.create(
+            title=title,
+            text=text,
+            img=img,
+            audio=audio,
+            user=user
+        )
+        memento.save()
+        messages.success(request, 'Yayy!! You Added Your Memento!')
+        return redirect('index')  
+    else:
+        return render(request, 'add-memento.html')
+    
+@login_required
 def profile(request):
-    return render(request, 'profile.html')
+    user = request.user
 
+    try:
+        user_profile = UserProfile.objects.get(user=user)
+    except UserProfile.DoesNotExist:
+        user_profile = None
+
+    total_mementos = Memento.objects.filter(user=user).count()
+
+    return render(request, 'profile.html', {'total_mementos': total_mementos, 'user_profile': user_profile})
+
+
+def signin(request):
+    if request.method == 'GET':
+        return render(request, 'login.html')
+    else:
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            next_url = request.GET.get('next')
+            if next_url:
+                return redirect(next_url)
+            else:
+                # Redirect to a default URL if 'next' is not present
+                return redirect('index')
+        else:
+            # Authentication failed, display an error message
+            messages.error(request, 'Invalid credentials. Please try again.')
+            return redirect('login')
+        
+@login_required()
+def signout(request): 
+    logout(request)
+    return redirect('login')
+
+
+def register(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+        profile_pic = request.FILES['profile_pic']
+
+        user = User.objects.create_user(username=username, email=email, password=password)
+
+        profile = UserProfile(user=user, profile_pic=profile_pic)
+        profile.save()
+
+        user = authenticate(username=username, password=password)
+        login(request, user)
+
+        return redirect('index')  
+
+    return render(request, 'register.html')
+
+@login_required
+def delete_memento(request, id):
+    memento = get_object_or_404(Memento, id=id, user=request.user)
+
+    recipient_email = memento.user.email
+
+    memento.delete()
+
+    subject = 'Memento Deleted!!'
+    message = 'Your memento has been deleted. Please contact the customer support if you didnot delete it.'
+    from_email = 'nicebanjaraa@gmail.com' 
+    recipient_list = [recipient_email]
+
+    send_mail(subject, message, from_email, recipient_list)
+
+    messages.success(request, 'Memento deleted successfully.')
+    return redirect('index')
+
+@login_required
+def edit_memento(request, memento_id):
+    memento = get_object_or_404(Memento, id=memento_id)
+
+    if request.method == 'POST':
+        title = request.POST['title']
+        text = request.POST['text']
+        img = request.FILES.get('img', memento.img)  # Use existing image if not changed
+        audio = request.FILES.get('audio', memento.audio)  # Use existing audio if not changed
+
+        memento.title = title
+        memento.text = text
+        memento.img = img
+        memento.audio = audio
+        memento.save()
+        messages.success(request, 'Yayy!! You Edited Your Memento!')
+
+        # Redirect to the index page after editing
+        return redirect('index')
+    else:
+        return render(request, 'edit-mementos.html', {'memento': memento})

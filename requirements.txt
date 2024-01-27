@@ -1,5 +1,2 @@
 gunicorn==21.1.0
-django==4.2.6
-authlib ~= 1.0
-python-dotenv ~= 0.19
-requests ~= 2.27
+django==4.2.6ß

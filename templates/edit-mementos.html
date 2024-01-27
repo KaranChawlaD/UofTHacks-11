@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container add-momento edit">
+    <div class="row align-items-center justify-content-center m-5">
+        <div class="col-md-12">
+            <form class="p-5" method="post" enctype="multipart/form-data" action="{% url 'edit_memento' memento_id=memento.id %}">
+                {% csrf_token %}
+                <h1 class="text-center">Edit Your Memento</h1>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" aria-describedby="titleHelp" value="{{ memento.title }}">
+                </div>
+                <div class="mb-3">
+                    <label for="text" class="form-label">Describe Your Memory</label>
+                    <textarea name="text" id="text" class="form-control" cols="30" rows="10">{{ memento.text }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="img" class="form-label">Choose New Image</label>
+                    <input type="file" class="form-control" id="img" name="img" accept="image/*">
+                    <!-- Display the current image -->
+                    {% if memento.img %}
+                        <b>Image Choosen Before: </b>
+                        <img src="{{ memento.img.url }}" alt="Current Image" class="img-thumbnail">
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="audio" class="form-label">Choose New Audio:</label>
+                    <input type="file" class="form-control" id="audio" name="audio" accept="audio/*">
+                    <!-- Display the current audio file -->
+                    {% if memento.audio %}
+                        <b>Audio choosen before: </b>
+                        <audio controls>
+                            <source src="{{ memento.audio.url }}" type="audio/mp3">
+                            Your browser does not support the audio element.
+                        </audio>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-danger">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
