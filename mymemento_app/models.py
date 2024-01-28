@@ -16,7 +16,9 @@ class Memento(models.Model):
     published_date = models.DateField(auto_now_add=True) # A field for storing a date value
     title = models.CharField(max_length=75)
     text = models.TextField(max_length=250)
-    img = models.ImageField(upload_to='static/mementos_files/images', default='') # A field for storing an image
+    img1 = models.ImageField(upload_to='static/mementos_files/images', blank=True, default='')
+    img2 = models.ImageField(upload_to='static/mementos_files/images', blank=True, default='')
+    img3 = models.ImageField(upload_to='static/mementos_files/images', blank=True, default='')
     audio = models.FileField(upload_to='static/mementos_files/audios', default='') # A field for storing an audio
 
     def __str__(self):

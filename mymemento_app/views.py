@@ -29,15 +29,19 @@ def addMemento(request):
         # Retrieve form data from POST request
         title = request.POST['title']
         text = request.POST['text']
-        img = request.FILES['img']
-        audio = request.FILES['audio']
+        img1 = request.FILES.get('img1')
+        img2 = request.FILES.get('img2')
+        img3 = request.FILES.get('img3')
+        audio = request.FILES.get('audio')
 
         user = request.user
 
         memento = Memento.objects.create(
             title=title,
             text=text,
-            img=img,
+            img1=img1,
+            img2=img2,
+            img3=img3,
             audio=audio,
             user=user
         )
@@ -81,12 +85,6 @@ def signin(request):
             # Authentication failed, display an error message
             messages.error(request, 'Invalid credentials. Please try again.')
             return redirect('login')
-        
-@login_required()
-def signout(request): 
-    logout(request)
-    return redirect('login')
-
 
 def register(request):
     if request.method == 'POST':
@@ -116,7 +114,7 @@ def delete_memento(request, id):
     memento.delete()
 
     subject = 'Memento Deleted!!'
-    message = 'Your memento has been deleted. Please contact the customer support if you didnot delete it.'
+    message = 'Your memento has been deleted. Please contact the customer support if you did not delete it.'
     from_email = 'nicebanjaraa@gmail.com' 
     recipient_list = [recipient_email]
 
@@ -132,12 +130,16 @@ def edit_memento(request, memento_id):
     if request.method == 'POST':
         title = request.POST['title']
         text = request.POST['text']
-        img = request.FILES.get('img', memento.img)  # Use existing image if not changed
+        img1 = request.FILES.get('img1', memento.img1)  # Use existing image if not changed
+        img2 = request.FILES.get('img2', memento.img2)  # Use existing image if not changed
+        img3 = request.FILES.get('img3', memento.img3)  # Use existing image if not changed
         audio = request.FILES.get('audio', memento.audio)  # Use existing audio if not changed
 
         memento.title = title
         memento.text = text
-        memento.img = img
+        memento.img1 = img1
+        memento.img2 = img2
+        memento.img3 = img3
         memento.audio = audio
         memento.save()
         messages.success(request, 'Yayy!! You Edited Your Memento!')
@@ -146,3 +148,10 @@ def edit_memento(request, memento_id):
         return redirect('index')
     else:
         return render(request, 'edit-mementos.html', {'memento': memento})
+
+    
+
+@login_required()
+def signout(request): 
+    logout(request)
+    return redirect('login')
